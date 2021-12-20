@@ -1,6 +1,7 @@
 import { Component } from "react";
 import "./app.css";
 import Habits from "./components/habits";
+import Navbar from "./components/navbar";
 
 class App extends Component {
   state = {
@@ -12,18 +13,23 @@ class App extends Component {
   };
 
   handleIncrement = (habit) => {
-    const habits = [...this.state.habits];
-    const index = habits.indexOf(habit);
-    habits[index].count++;
+    const habits = this.state.habits.map((item) => {
+      if (habit.id === item.id) {
+        return { ...habit, count: habit.count + 1 };
+      }
+      return item;
+    });
     this.setState({ habits });
   };
 
   handleDescrement = (habit) => {
-    const habits = [...this.state.habits];
-    const index = habits.indexOf(habit);
-    const habitCount = habits[index].count - 1;
-
-    habits[index].count = habitCount < 0 ? 0 : habitCount;
+    const habits = this.state.habits.map((item) => {
+      if (habit.id === item.id) {
+        const habitCount = item.count - 1;
+        return { ...habit, count: habitCount < 0 ? 0 : habitCount };
+      }
+      return item;
+    });
     this.setState({ habits });
   };
 
@@ -34,14 +40,32 @@ class App extends Component {
     this.setState({ habits });
   };
 
+  handleAdd = (name) => {
+    const habits = [...this.state.habits, { id: Date.now(), name, count: 0 }];
+    this.setState({ habits });
+  };
+  handleReset = () => {
+    const habits = this.state.habits.map((habit) => {
+      if (habit.count > 0) {
+        return { ...habit, count: 0 };
+      }
+      return habit;
+    });
+    this.setState({ habits });
+  };
   render() {
     return (
-      <Habits
-        habits={this.state.habits}
-        handleIncrement={this.handleIncrement}
-        handleDescrement={this.handleDescrement}
-        handleDelete={this.handleDelete}
-      />
+      <>
+        <Navbar totalCount={this.state.habits.length} />
+        <Habits
+          habits={this.state.habits}
+          handleIncrement={this.handleIncrement}
+          handleDescrement={this.handleDescrement}
+          handleDelete={this.handleDelete}
+          handleAdd={this.handleAdd}
+          handleReset={this.handleReset}
+        />
+      </>
     );
   }
 }
