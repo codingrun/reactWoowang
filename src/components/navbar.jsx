@@ -1,15 +1,16 @@
-import React, { Component } from "react";
+import React, { memo, useEffect } from "react";
 
-class Navbar extends Component {
-  render() {
-    return (
-      <nav>
-        <i className="navbar-logo fas fa-leaf"></i>
-        <span>Habit Tracker</span>
-        <span className="navbar-count">{this.props.totalCount}</span>
-      </nav>
-    );
-  }
-}
+const Navbar = memo((props) => {
+  useEffect(() => {
+    console.log("navbar :>> ");
+  });
+  return (
+    <nav>
+      <i className="navbar-logo fas fa-leaf"></i>
+      <span>Habit Tracker</span>
+      <span className="navbar-count">{props.totalCount}</span>
+    </nav>
+  );
+});
 
 export default Navbar;
